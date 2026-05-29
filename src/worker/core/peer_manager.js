@@ -404,26 +404,21 @@ export class PeerManager {
     session.mySessionId = ws.serverSessionId;
     const forceFullLocal = forceFull || !session.dstSessionId;
 
-    const allPeers = new Set(this.listPeerIdsInGroup(groupKey));
+    const allPeers = new Set();
     const infos = this._getPeerInfosMap(groupKey, false);
     if (infos) {
       for (const pid of infos.keys()) {
         allPeers.add(pid);
       }
     }
-    allPeers.add(targetPeerId);
     const relevantPeers = [MY_PEER_ID, ...Array.from(allPeers).filter(p => p !== MY_PEER_ID).sort((a, b) => Number(a) - Number(b))];
-    const defaultNetLen = myInfo.networkLength || 24;
 
     const peerInfosItems = [];
     for (const pid of relevantPeers) {
       let info = (pid === MY_PEER_ID)
         ? myInfo
         : (this._getPeerInfosMap(groupKey, false)?.get(pid));
-      if (!info) {
-        info = makeStubPeerInfo(pid, defaultNetLen);
-        this._getPeerInfosMap(groupKey, true).set(pid, info);
-      }
+      if (!info) continue;
       const version = info && info.version ? info.version : 1;
       const prev = forceFullLocal ? 0 : (session.peerInfoVerMap.get(pid) || 0);
       if (forceFullLocal || version > prev) {

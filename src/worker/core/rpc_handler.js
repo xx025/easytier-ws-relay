@@ -441,9 +441,6 @@ function handleSyncRouteInfo(ws, fromPeerId, reqRpcPacket, syncReq, types) {
         pm().updatePeerInfo(groupKey, info.peerId, info);
         if (isNew) hasNewPeers = true;
       }
-      if (info.peerId === MY_PEER_ID) {
-        pm().updatePeerInfo(groupKey, info.peerId, info);
-      }
     });
   }
 

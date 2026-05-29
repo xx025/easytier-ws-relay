@@ -56,13 +56,6 @@ export function handleHandshake(ws, header, payload, types) {
     ws.peerId = req.myPeerId;
     const pm = getPeerManager();
     pm.addPeer(req.myPeerId, ws);
-    pm.updatePeerInfo(ws.groupKey, req.myPeerId, {
-      peerId: req.myPeerId,
-      version: 1,
-      lastUpdate: { seconds: Math.floor(Date.now() / 1000), nanos: 0 },
-      instId: { part1: 0, part2: 0, part3: 0, part4: 0 },
-      networkLength: Number(process.env.EASYTIER_NETWORK_LENGTH || 24),
-    });
     pm.setPublicServerFlag(true);
     ws.crypto = { enabled: false };
 
